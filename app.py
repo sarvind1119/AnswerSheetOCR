@@ -14,7 +14,7 @@ from answersheet_ocr.analytics import build_analytics
 from answersheet_ocr.config import DEFAULT_DPI, DEFAULT_MODEL, ensure_directories, load_dotenv
 from answersheet_ocr.models import PageOCR
 from answersheet_ocr.ocr import OpenAIOCRClient, describe_ocr_exception
-from answersheet_ocr.pdf import render_pdf_to_images
+from answersheet_ocr.pdf import PDFRenderError, render_pdf_to_images
 from answersheet_ocr.report import generate_docx_report
 from answersheet_ocr.storage import (
     create_run_record,
@@ -29,6 +29,16 @@ from answersheet_ocr.storage import (
 
 def init_state() -> None:
     st.session_state.setdefault("run_id", "")
+
+
+def load_streamlit_secrets() -> None:
+    """Allow Streamlit Cloud secrets to provide the OpenAI API key."""
+    try:
+        api_key = st.secrets.get("OPENAI_API_KEY")
+    except Exception:
+        api_key = None
+    if api_key:
+        os.environ["OPENAI_API_KEY"] = str(api_key)
 
 
 def load_current_run():
@@ -115,6 +125,7 @@ def main() -> None:
         initial_sidebar_state="expanded",
     )
     init_state()
+    load_streamlit_secrets()
     st.title("Handwritten Answer Sheet Digitization")
 
     with st.sidebar:
@@ -142,13 +153,17 @@ def main() -> None:
             run_id = new_run_id(uploaded.name)
             pdf_path = save_uploaded_pdf(uploaded, run_id=run_id)
             with st.spinner("Rendering PDF pages..."):
-                page_images = render_pdf_to_images(
-                    pdf_path,
-                    page_output_dir(run_id),
-                    dpi=dpi,
-                    poppler_path=poppler_path or None,
-                    max_pages=max_pages or None,
-                )
+                try:
+                    page_images = render_pdf_to_images(
+                        pdf_path,
+                        page_output_dir(run_id),
+                        dpi=dpi,
+                        poppler_path=poppler_path or None,
+                        max_pages=max_pages or None,
+                    )
+                except PDFRenderError as exc:
+                    st.error(str(exc))
+                    st.stop()
             record = create_run_record(
                 run_id=run_id,
                 source_pdf_name=uploaded.name,

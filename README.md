@@ -32,6 +32,20 @@ Poppler is required for PDF rendering. If `pdftoppm` is not on `PATH`, set `POPP
 py -m streamlit run app.py
 ```
 
+## Streamlit Community Cloud Deployment
+
+This app uses `pdf2image`, which requires Poppler system binaries. The repo
+includes `packages.txt` with `poppler-utils` so Streamlit Community Cloud installs
+`pdfinfo` and `pdftoppm` during deployment.
+
+After pushing changes to GitHub, reboot or redeploy the Streamlit app from
+`Manage app`. Add `OPENAI_API_KEY` in Streamlit Cloud secrets:
+
+```toml
+OPENAI_API_KEY = "sk-proj-..."
+OPENAI_TRUST_ENV_PROXY = false
+```
+
 ## Test
 
 ```powershell
