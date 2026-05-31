@@ -6,6 +6,8 @@ __all__ = [
     "models",
     "ocr",
     "pdf",
+    "providers",
     "report",
+    "sarvam",
     "storage",
 ]

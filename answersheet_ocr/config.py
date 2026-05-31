@@ -11,9 +11,39 @@ UPLOADS_DIR = DATA_DIR / "uploads"
 PAGES_DIR = DATA_DIR / "pages"
 RUNS_DIR = DATA_DIR / "runs"
 REPORTS_DIR = PROJECT_ROOT / "reports"
+PROVIDER_ARTIFACTS_DIR = DATA_DIR / "provider_artifacts"
 
 DEFAULT_MODEL = "gpt-4o-mini"
 DEFAULT_DPI = 220
+DEFAULT_PROVIDER = "openai"
+DEFAULT_SARVAM_LANGUAGE = "hi-IN"
+SARVAM_OUTPUT_FORMAT = "md"
+SARVAM_BATCH_SIZE = 10
+SARVAM_LANGUAGES = {
+    "Hindi": "hi-IN",
+    "English": "en-IN",
+    "Bengali": "bn-IN",
+    "Gujarati": "gu-IN",
+    "Kannada": "kn-IN",
+    "Malayalam": "ml-IN",
+    "Marathi": "mr-IN",
+    "Odia": "or-IN",
+    "Punjabi": "pa-IN",
+    "Tamil": "ta-IN",
+    "Telugu": "te-IN",
+    "Urdu": "ur-IN",
+    "Assamese": "as-IN",
+    "Bodo": "bodo-IN",
+    "Dogri": "doi-IN",
+    "Kashmiri": "ks-IN",
+    "Konkani": "kok-IN",
+    "Maithili": "mai-IN",
+    "Manipuri": "mni-IN",
+    "Nepali": "ne-IN",
+    "Sanskrit": "sa-IN",
+    "Santali": "sat-IN",
+    "Sindhi": "sd-IN",
+}
 PROXY_ENV_VARS = (
     "HTTP_PROXY",
     "HTTPS_PROXY",
@@ -32,7 +62,7 @@ class AppSettings:
 
 
 def ensure_directories() -> None:
-    for directory in (UPLOADS_DIR, PAGES_DIR, RUNS_DIR, REPORTS_DIR):
+    for directory in (UPLOADS_DIR, PAGES_DIR, RUNS_DIR, REPORTS_DIR, PROVIDER_ARTIFACTS_DIR):
         directory.mkdir(parents=True, exist_ok=True)
 
 

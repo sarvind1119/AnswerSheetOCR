@@ -43,7 +43,7 @@ class PageOCR(BaseModel):
 
 
 class RunMetadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     run_id: str
     source_pdf_name: str
@@ -53,6 +53,9 @@ class RunMetadata(BaseModel):
     )
     model: str
     dpi: int
+    ocr_provider: str = "openai"
+    sarvam_language_code: str | None = None
+    provider_job_ids: list[str] = Field(default_factory=list)
 
 
 class RunRecord(BaseModel):

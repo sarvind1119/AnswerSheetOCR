@@ -55,6 +55,8 @@ def create_run_record(
     model: str,
     dpi: int,
     page_images: list[Path],
+    ocr_provider: str = "openai",
+    sarvam_language_code: str | None = None,
 ) -> RunRecord:
     return RunRecord(
         metadata=RunMetadata(
@@ -63,6 +65,8 @@ def create_run_record(
             source_pdf_path=str(source_pdf_path),
             model=model,
             dpi=dpi,
+            ocr_provider=ocr_provider,
+            sarvam_language_code=sarvam_language_code,
         ),
         page_images=[str(path) for path in page_images],
         pages=[],

@@ -1,6 +1,6 @@
 # Handwritten Answer Sheet Digitization Prototype
 
-Local Streamlit prototype for PDF answer-sheet upload, page rendering, GPT-4o-mini OCR, question-wise review, analytics, and DOCX export.
+Local Streamlit prototype for PDF answer-sheet upload, page rendering, OpenAI or Sarvam AI OCR, question-wise review, analytics, and DOCX export.
 
 ## Setup
 
@@ -17,12 +17,20 @@ If you are using the already installed user Python instead of a virtual environm
 py -m pip install -r requirements.txt
 ```
 
-Edit `.env` and set `OPENAI_API_KEY`.
+Edit `.env` and set at least one provider key:
+
+- `OPENAI_API_KEY` for OpenAI OCR.
+- `SARVAM_API_KEY` for Sarvam AI Document Digitization.
+
+Sarvam jobs request Markdown output because the Sarvam API accepts `md` or
+`html`; the app still reads the JSON file that Sarvam includes in the returned
+output ZIP when it is available.
 
 By default, the OpenAI client ignores system proxy environment variables because
 some Windows sessions set blocked local proxies such as `127.0.0.1:9`. If your
 network needs a real proxy, set `OPENAI_TRUST_ENV_PROXY=true` and configure
-`HTTP_PROXY`/`HTTPS_PROXY` normally.
+`SARVAM_TRUST_ENV_PROXY=true` as needed, then configure `HTTP_PROXY`/`HTTPS_PROXY`
+normally.
 
 Poppler is required for PDF rendering. If `pdftoppm` is not on `PATH`, set `POPPLER_PATH` in `.env`.
 
@@ -39,11 +47,13 @@ includes `packages.txt` with `poppler-utils` so Streamlit Community Cloud instal
 `pdfinfo` and `pdftoppm` during deployment.
 
 After pushing changes to GitHub, reboot or redeploy the Streamlit app from
-`Manage app`. Add `OPENAI_API_KEY` in Streamlit Cloud secrets:
+`Manage app`. Add provider keys in Streamlit Cloud secrets:
 
 ```toml
 OPENAI_API_KEY = "sk-proj-..."
+SARVAM_API_KEY = "..."
 OPENAI_TRUST_ENV_PROXY = false
+SARVAM_TRUST_ENV_PROXY = false
 ```
 
 ## Test
